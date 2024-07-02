@@ -56,6 +56,16 @@ function HttpClient.post(self: HttpClient, url: string, body: string): UnknownRe
 	})
 end
 
+function HttpClient.patch(self: HttpClient, url: string, givenBody: string | { [any]: any }): UnknownResponse
+	local body = if typeof(givenBody) == "table" then serde.encode("json", givenBody) else givenBody
+	return self:_request({
+		method = "PATCH",
+		url = url,
+		headers = { ["Content-Type"] = "application/json", ["x-api-key"] = self._apiKey },
+		body = body,
+	})
+end
+
 function HttpClient.get(self: HttpClient, url: string): UnknownResponse
 	return self:_request({
 		method = "GET",

@@ -17,17 +17,11 @@ local client = Cirrus.new({
 	retries = 0,
 })
 
--- Call v2 endpoints
-local response = client.v2.user:generateThumbnail({ userId = 4000, size = "48x48", format = "PNG", shape = "ROUND" })
-if response.ok then
-	print(response.data)
-else
-	print(response.reason)
-end
-
--- Call v1 endpoints
-client.v1.messaging:publish({
-	message = "Hello",
-	topic = "topic",
-	universeId = 1,
+client.v2.place:updateInfo({
+	universeId = 4871172287,
+	placeId = 14067098357,
+	fields = {
+		description = "test desc",
+		displayName = "test name",
+	},
 })
