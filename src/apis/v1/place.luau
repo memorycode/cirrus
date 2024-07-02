@@ -14,7 +14,7 @@ local function place(http: httpClient.HttpClient)
 		return http:post(
 			`https://apis.roblox.com/universes/v1/{params.universeId}/places/{params.placeId}/versions?versionType={params.versionType}`,
 			params.place
-		)
+		) :: httpClient.Response<{ versionNumber: number }>
 	end
 
 	return table.freeze({
