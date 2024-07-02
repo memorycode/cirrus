@@ -47,7 +47,8 @@ function HttpClient._request(self: HttpClient, params: net.FetchParams): Unknown
 	return { ok = false, reason = decode(response.body), raw = response }
 end
 
-function HttpClient.post(self: HttpClient, url: string, body: string): UnknownResponse
+function HttpClient.post(self: HttpClient, url: string, givenBody: string | { [any]: any }): UnknownResponse
+	local body = if typeof(givenBody) == "table" then serde.encode("json", givenBody) else givenBody
 	return self:_request({
 		method = "POST",
 		url = url,

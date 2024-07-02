@@ -41,7 +41,7 @@ local function place(http: httpClient.HttpClient)
 		return http:patch(
 			`https://apis.roblox.com/cloud/v2/universes/{params.universeId}/places/{params.placeId}?updateMask={fieldMask}`,
 			params.fields
-		)
+		) :: httpClient.Response<OutputPlace>
 	end
 
 	return table.freeze({

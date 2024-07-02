@@ -17,11 +17,11 @@ local client = Cirrus.new({
 	retries = 0,
 })
 
-client.v2.place:updateInfo({
+print(client.v2.place:updateInfo({
 	universeId = 4871172287,
 	placeId = 14067098357,
 	fields = {
 		description = "test desc",
 		displayName = "test name",
 	},
-})
+}))
