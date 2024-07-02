@@ -17,11 +17,10 @@ local client = Cirrus.new({
 	retries = 0,
 })
 
-print(client.v2.place:updateInfo({
-	universeId = 4871172287,
-	placeId = 14067098357,
-	fields = {
-		description = "test desc",
-		displayName = "test name",
-	},
+local placeFile = fs.readFile("place.rbxl")
+print(client.v1.place:publish({
+	placeId = 18308356731,
+	universeId = 6206874897,
+	place = buffer.fromstring(placeFile),
+	versionType = "Published",
 }))
