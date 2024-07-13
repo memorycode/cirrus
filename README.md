@@ -1,7 +1,7 @@
 # Cirrus
 Cirrus is a Luau (Lune) library for interacting with Roblox's Open Cloud.
 
-[!WARNING]
+> [!WARNING]
 The API is unstable and changing often.
 
 ## Supported Endpoints
