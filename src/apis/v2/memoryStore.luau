@@ -20,8 +20,6 @@ type SortedMapItemOutput = SortedMapItem & {
 	etag: string,
 }
 
-type MemoryStoreSortedMapItems = { SortedMapItemOutput }
-
 local function createSortedMap(http: HttpClient.HttpClient)
 	local sortedMap = {}
 
@@ -48,7 +46,7 @@ local function createSortedMap(http: HttpClient.HttpClient)
 		return http:get(
 			`https://apis.roblox.com/cloud/v2/universes/{data.universeId}/memory-store/sorted-maps/{data.name}/items`,
 			params
-		) :: HttpClient.Response<{ memoryStoreSortedMapItems: MemoryStoreSortedMapItems, nextPageToken: string? }>
+		) :: HttpClient.Response<{ memoryStoreSortedMapItems: { SortedMapItemOutput }, nextPageToken: string? }>
 	end
 
 	--- @param universeId The universe to access
