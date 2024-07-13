@@ -29,7 +29,7 @@ local function createSortedMap(http: HttpClient.HttpClient)
 	--- @param pageToken
 	--- @param orderBy
 	--- @param filter
-	function sortedMap:listItems(data: {
+	function sortedMap.listItems(data: {
 		universeId: robloxTypes.UniverseId,
 		name: string,
 
@@ -52,7 +52,7 @@ local function createSortedMap(http: HttpClient.HttpClient)
 	--- @param universeId The universe to access
 	--- @param name The name of the sorted map
 	--- @param id The key of the item to delete
-	function sortedMap:deleteItem(data: { universeId: robloxTypes.UniverseId, name: string, id: string })
+	function sortedMap.deleteItem(data: { universeId: robloxTypes.UniverseId, name: string, id: string })
 		return http:delete(
 			`https://apis.roblox.com/cloud/v2/universes/{data.universeId}/memory-store/sorted-maps/{data.name}/items/{data.id}`
 		)
