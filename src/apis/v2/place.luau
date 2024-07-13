@@ -1,5 +1,5 @@
 local robloxTypes = require("../../robloxTypes")
-local httpClient = require("../../httpClient")
+local HttpClient = require("../../HttpClient")
 local createFieldMask = require("../../createFieldMask")
 
 type Place = {
@@ -22,11 +22,11 @@ type OutputPlace = Place & {
 	updateTime: robloxTypes.Timestamp,
 }
 
-local function place(http: httpClient.HttpClient)
+local function place(http: HttpClient.HttpClient)
 	local function getInfo(_, params: { universeId: robloxTypes.UniverseId, placeId: robloxTypes.PlaceId })
 		return http:get(
 				`https://apis.roblox.com/cloud/v2/universes/{params.universeId}/places/{params.placeId}`
-			) :: httpClient.Response<OutputPlace>
+			) :: HttpClient.Response<OutputPlace>
 	end
 
 	local function updateInfo(
@@ -41,7 +41,7 @@ local function place(http: httpClient.HttpClient)
 		return http:patch(
 			`https://apis.roblox.com/cloud/v2/universes/{params.universeId}/places/{params.placeId}?updateMask={fieldMask}`,
 			params.fields
-		) :: httpClient.Response<OutputPlace>
+		) :: HttpClient.Response<OutputPlace>
 	end
 
 	return table.freeze({

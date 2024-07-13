@@ -34,6 +34,7 @@ local function decode(body: string)
 end
 
 function HttpClient._request(self: HttpClient, params: net.FetchParams): UnknownResponse
+	--print(params)
 	local response = net.request(params)
 	if response.ok then
 		return { ok = true, data = decode(response.body), raw = response }
@@ -68,6 +69,14 @@ function HttpClient.post(self: HttpClient, url: string, body: Body): UnknownResp
 	})
 end
 
+function HttpClient.delete(self: HttpClient, url: string): UnknownResponse
+	return self:_request({
+		method = "DELETE",
+		url = url,
+		headers = { ["Content-Type"] = "application/json", ["x-api-key"] = self._apiKey },
+	})
+end
+
 function HttpClient.patch(self: HttpClient, url: string, body: Body): UnknownResponse
 	local serialized = serialize(body)
 	return self:_request({
@@ -78,11 +87,12 @@ function HttpClient.patch(self: HttpClient, url: string, body: Body): UnknownRes
 	})
 end
 
-function HttpClient.get(self: HttpClient, url: string): UnknownResponse
+function HttpClient.get(self: HttpClient, url: string, params: { [string]: string }?): UnknownResponse
 	return self:_request({
 		method = "GET",
 		url = url,
 		headers = { ["Content-Type"] = "application/json", ["x-api-key"] = self._apiKey },
+		query = params,
 	})
 end
 

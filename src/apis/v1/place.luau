@@ -1,7 +1,7 @@
 local robloxTypes = require("../../robloxTypes")
-local httpClient = require("../../httpClient")
+local HttpClient = require("../../HttpClient")
 
-local function place(http: httpClient.HttpClient)
+local function place(http: HttpClient.HttpClient)
 	local function publish(
 		_,
 		params: {
@@ -14,7 +14,7 @@ local function place(http: httpClient.HttpClient)
 		return http:post(
 			`https://apis.roblox.com/universes/v1/{params.universeId}/places/{params.placeId}/versions?versionType={params.versionType}`,
 			params.place
-		) :: httpClient.Response<{ versionNumber: number }>
+		) :: HttpClient.Response<{ versionNumber: number }>
 	end
 
 	return table.freeze({

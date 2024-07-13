@@ -1,5 +1,5 @@
 local fs = require("@lune/fs")
-local Cirrus = require("../")
+local Cirrus = require("../src")
 
 local client = Cirrus.new({ apiKey = "" })
 client.v1.place:publish({

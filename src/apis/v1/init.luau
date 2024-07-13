@@ -1,8 +1,8 @@
 local messaging = require("./messaging")
 local place = require("./place")
-local httpClient = require("../../httpClient")
+local HttpClient = require("../../HttpClient")
 
-return function(http: httpClient.HttpClient)
+return function(http: HttpClient.HttpClient)
 	return table.freeze({
 		messaging = messaging(http),
 		place = place(http),

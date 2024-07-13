@@ -1,6 +1,9 @@
 # Cirrus
 Cirrus is a Luau (Lune) library for interacting with Roblox's Open Cloud.
 
+[!WARNING]
+The API is unstable and changing often.
+
 ## Supported Endpoints
 ✅ full
 🟡 some
@@ -12,7 +15,7 @@ Cirrus is a Luau (Lune) library for interacting with Roblox's Open Cloud.
 | Groups | ❌ | | Data Stores |  ❌
 | Instances | ❌ | | Messaging | ✅ 
 | Inventory | ❌ | | Place Publishing | ✅ 
-| Memory Stores | ❌
+| Memory Stores | 🟡
 | Places | ✅
 | Subscriptions | ❌
 | Universes | ❌
@@ -23,13 +26,15 @@ Cirrus is a Luau (Lune) library for interacting with Roblox's Open Cloud.
 ## Example
 ```luau
 -- Create Cirrus client
-local client = Cirrus.new({
+local cirrus = Cirrus.new({
 	apiKey = process.env.API_KEY,
 	retries = 0,
 })
 
+local v1, v2 = cirrus.v1, cirrus.v2
+
 -- Call v2 endpoints
-local response = client.v2.user:generateThumbnail({ userId = 4000, size = "48x48", format = "PNG", shape = "ROUND" })
+local response = v2.user:generateThumbnail({ userId = 4000, size = "48x48", format = "PNG", shape = "ROUND" })
 if response.ok then
 	print(response.data)
 else
@@ -37,7 +42,7 @@ else
 end 
 
 -- Call v1 endpoints
-client.v1.messaging:publish({
+v1.messaging:publish({
 	message = "Hello",
 	topic = "topic",
 	universeId = 1,
