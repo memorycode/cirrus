@@ -6,7 +6,7 @@ local HttpClient = require("./HttpClient")
 local Cirrus = {}
 Cirrus.__index = Cirrus
 
-function Cirrus.connectToUniverse(config: { apiKey: robloxTypes.ApiKey, retries: number? })
+function Cirrus.new(config: { apiKey: robloxTypes.ApiKey, retries: number? })
 	local http = HttpClient.new(config.apiKey, config.retries or 0)
 	return setmetatable({
 		v1 = v1(http),
@@ -17,7 +17,5 @@ function Cirrus.connectToUniverse(config: { apiKey: robloxTypes.ApiKey, retries:
 	}, Cirrus)
 end
 
-function Cirrus.connectToPlace() end
-
-export type Cirrus = typeof(Cirrus.connectToUniverse({ apiKey = "" }))
+export type Cirrus = typeof(Cirrus.new({ apiKey = "" }))
 return Cirrus

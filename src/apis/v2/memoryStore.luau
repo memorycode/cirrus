@@ -20,24 +20,26 @@ type SortedMapItemOutput = SortedMapItem & {
 	etag: string,
 }
 
+type MemoryStoreSortedMapItems = { SortedMapItemOutput }
+
 local function createSortedMap(http: HttpClient.HttpClient)
 	local sortedMap = {}
 
+	--- @param universeId The universe to access
 	--- @param name The name of the sorted map
-	--- @param universeId The universe to list from
 	--- @param maxPageSize The number of items to return
-	sortedMap.listItems = function(
-		_: typeof(sortedMap),
-		data: {
-			universeId: number,
-			name: string,
+	--- @param pageToken
+	--- @param orderBy
+	--- @param filter
+	function sortedMap:listItems(data: {
+		universeId: robloxTypes.UniverseId,
+		name: string,
 
-			maxPageSize: number?,
-			pageToken: string?,
-			orderBy: string?,
-			filter: string?,
-		}
-	)
+		maxPageSize: number?,
+		pageToken: string?,
+		orderBy: string?,
+		filter: string?,
+	})
 		local params = table.clone(data) :: any
 		params.name = nil
 		params.universeId = nil
@@ -46,14 +48,15 @@ local function createSortedMap(http: HttpClient.HttpClient)
 		return http:get(
 			`https://apis.roblox.com/cloud/v2/universes/{data.universeId}/memory-store/sorted-maps/{data.name}/items`,
 			params
-		) :: HttpClient.Response<{ memoryStoreSortedMapItems: { SortedMapItemOutput }, nextPageToken: string? }>
+		) :: HttpClient.Response<{ memoryStoreSortedMapItems: MemoryStoreSortedMapItems, nextPageToken: string? }>
 	end
 
+	--- @param universeId The universe to access
 	--- @param name The name of the sorted map
-	--- @param id The key of the item
-	sortedMap.deleteItem = function(_: typeof(sortedMap), params: { universeId: number, name: string, id: string })
+	--- @param id The key of the item to delete
+	function sortedMap:deleteItem(data: { universeId: robloxTypes.UniverseId, name: string, id: string })
 		return http:delete(
-			`https://apis.roblox.com/cloud/v2/universes/{params.universeId}/memory-store/sorted-maps/{params.name}/items/{params.id}`
+			`https://apis.roblox.com/cloud/v2/universes/{data.universeId}/memory-store/sorted-maps/{data.name}/items/{data.id}`
 		)
 	end
 
