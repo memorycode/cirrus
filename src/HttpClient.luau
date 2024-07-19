@@ -34,7 +34,6 @@ local function decode(body: string)
 end
 
 function HttpClient._request(self: HttpClient, params: net.FetchParams): UnknownResponse
-	--print(params)
 	local response = net.request(params)
 	if response.ok then
 		return { ok = true, data = decode(response.body), raw = response }
