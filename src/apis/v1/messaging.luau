@@ -1,7 +1,7 @@
 local robloxTypes = require("../../robloxTypes")
-local httpClient = require("../../httpClient")
+local HttpClient = require("../../HttpClient")
 
-local function messaging(http: httpClient.HttpClient)
+local function messaging(http: HttpClient.HttpClient)
 	local function publish(
 		_,
 		data: { universeId: robloxTypes.UniverseId, topic: string, message: string, [string]: nil }
