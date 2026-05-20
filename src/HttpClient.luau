@@ -55,7 +55,7 @@ function HttpClient._request(self: HttpClient, url: string, metadata: net.Metada
 	return { ok = false, reason = response.body, raw = response }
 end
 
-function HttpClient.post(self: HttpClient, url: string, body: Body): UnknownResponse
+function HttpClient.post<T>(self: HttpClient, url: string, body: Body): Response<T>
 	local serialized = serialize(body)
 	return self:_request(url, {
 		method = "POST",
@@ -71,7 +71,7 @@ function HttpClient.delete(self: HttpClient, url: string): UnknownResponse
 	})
 end
 
-function HttpClient.patch(self: HttpClient, url: string, body: Body): UnknownResponse
+function HttpClient.patch<T>(self: HttpClient, url: string, body: Body): Response<T>
 	local serialized = serialize(body)
 	return self:_request(url, {
 		method = "PATCH",
@@ -80,7 +80,7 @@ function HttpClient.patch(self: HttpClient, url: string, body: Body): UnknownRes
 	})
 end
 
-function HttpClient.get(self: HttpClient, url: string): UnknownResponse
+function HttpClient.get<T>(self: HttpClient, url: string): Response<T>
 	return self:_request(url, {
 		method = "GET",
 		headers = { ["Content-Type"] = "application/json", ["x-api-key"] = self._apiKey },

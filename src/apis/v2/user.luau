@@ -14,9 +14,7 @@ type ThumbnailSize =
 	| "420x420"
 	| "720x720"
 
-local function user(http: HttpClient.HttpClient)
-	local function get(_, userId: robloxTypes.UserId)
-		return http:get(`https://apis.roblox.com/cloud/v2/users/{userId}`) :: HttpClient.Response<{
+type GetUserParams = {
 			path: string,
 			createTime: string,
 			id: string,
@@ -36,7 +34,11 @@ local function user(http: HttpClient.HttpClient)
 				guilded: string?,
 				visibility: string,
 			}?,
-		}>
+		}
+
+local function user(http: HttpClient.HttpClient)
+	local function get(_, userId: robloxTypes.UserId)
+		return http:get<<GetUserParams>>(`https://apis.roblox.com/cloud/v2/users/{userId}`) 
 	end
 
 	local function generateThumbnail(
@@ -44,14 +46,14 @@ local function user(http: HttpClient.HttpClient)
 		params: {
 			userId: robloxTypes.UserId,
 			size: ThumbnailSize,
-			format: "PNG",
+			format: "PNG", 
 			shape: "ROUND",
 		}
 	)
 		local parsedSize = params.size:split("x")[1]
-		return http:get(
+		return http:get<<robloxTypes.Operation<{ imageUri: string }>>>(
 			`https://apis.roblox.com/cloud/v2/users/{params.userId}:generateThumbnail?size={parsedSize}&format={params.format}&shape={params.shape}`
-		) :: HttpClient.Response<robloxTypes.Operation<{ imageUri: string }>>
+		)
 	end
 
 	return table.freeze({

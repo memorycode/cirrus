@@ -11,10 +11,9 @@ local function place(http: HttpClient.HttpClient)
 			place: buffer,
 		}
 	)
-		return http:post(
-			`https://apis.roblox.com/universes/v1/{params.universeId}/places/{params.placeId}/versions?versionType={params.versionType}`,
+		return http:post<<{ versionNumber: number }>>(`https://apis.roblox.com/universes/v1/{params.universeId}/places/{params.placeId}/versions?versionType={params.versionType}`,
 			params.place
-		) :: HttpClient.Response<{ versionNumber: number }>
+		)
 	end
 
 	return table.freeze({

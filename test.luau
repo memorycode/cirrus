@@ -1,6 +1,7 @@
 local fs = require("@std/fs")
 local process = require("@std/process")
 local json = require("@std/json")
+local pp = require("./src/vendor/pp")
 
 local Cirrus = require("./src/")
 
@@ -23,10 +24,6 @@ local client = Cirrus.new({
 	retries = 0,
 })
 
---local placeFile = fs.readFileToString("place.rbxl")
--- print(client.v1.place:publish({
--- 	placeId = 18308356731,
--- 	universeId = 6206874897,
--- 	place = buffer.fromstring(placeFile),
--- 	versionType = "Published",
--- }))
+local placeInfo = client.v2.place:getInfo({ universeId = 6206874897, placeId = 18308356731 })
+print(pp(placeInfo))
+print(pp(client.v2.user:get(12233433)))
