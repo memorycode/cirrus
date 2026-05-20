@@ -1,3 +1,4 @@
 env.toml 
 *.rbxl
 *.rbxl.lock
+env.json

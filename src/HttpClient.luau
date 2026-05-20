@@ -1,11 +1,8 @@
 local robloxTypes = require("./robloxTypes")
-local net = require("@lune/net")
-local serde = require("@lune/serde")
-local task = require("@lune/task")
+local net = require("@std/net")
+local json = require("@std/json")
 
-export type Response<T> =
-	{ ok: true, data: T, raw: net.FetchResponse }
-	| { ok: false, reason: string, raw: net.FetchResponse }
+export type Response<T> = { ok: true, data: T, raw: net.Response } | { ok: false, reason: string, raw: net.Response }
 export type UnknownResponse = Response<string | { [any]: any }>
 
 export type Body = string | { [any]: any } | buffer
@@ -22,30 +19,30 @@ local function serialize(body: Body): { contentType: string, content: string }
 	if typeof(body) == "buffer" then
 		return { contentType = "application/octet-stream", content = buffer.tostring(body) }
 	elseif typeof(body) == "table" then
-		return { contentType = "application/json", content = serde.encode("json", body) }
+		return { contentType = "application/json", content = json.serialize(body) }
 	else
 		return { contentType = "application/json", content = body }
 	end
 end
 
 local function decode(body: string)
-	local ok, result = pcall(serde.decode, "json" :: "json", body)
+	local ok, result = pcall(json.deserialize, body)
 	return if ok then result else body
 end
 
-function HttpClient._request(self: HttpClient, params: net.FetchParams): UnknownResponse
-	local response = net.request(params)
+function HttpClient._request(self: HttpClient, url: string, metadata: net.Metadata): UnknownResponse
+	local response = net.request(url, metadata)
 	if response.ok then
 		return { ok = true, data = decode(response.body), raw = response }
 	end
 
 	local maxRetries = self._retries
 	if maxRetries == 0 then
-		return { ok = false, reason = decode(response.body), raw = response }
+		return { ok = false, reason = response.body, raw = response }
 	end
 
 	for retryNumber = 1, maxRetries do
-		response = net.request(params)
+		response = net.request(url, metadata)
 		if response.ok then
 			return { ok = true, data = decode(response.body), raw = response }
 		end
@@ -55,43 +52,38 @@ function HttpClient._request(self: HttpClient, params: net.FetchParams): Unknown
 		end
 	end
 
-	return { ok = false, reason = decode(response.body), raw = response }
+	return { ok = false, reason = response.body, raw = response }
 end
 
 function HttpClient.post(self: HttpClient, url: string, body: Body): UnknownResponse
 	local serialized = serialize(body)
-	return self:_request({
+	return self:_request(url, {
 		method = "POST",
-		url = url,
 		headers = { ["Content-Type"] = serialized.contentType, ["x-api-key"] = self._apiKey },
 		body = serialized.content,
 	})
 end
 
 function HttpClient.delete(self: HttpClient, url: string): UnknownResponse
-	return self:_request({
+	return self:_request(url, {
 		method = "DELETE",
-		url = url,
 		headers = { ["Content-Type"] = "application/json", ["x-api-key"] = self._apiKey },
 	})
 end
 
 function HttpClient.patch(self: HttpClient, url: string, body: Body): UnknownResponse
 	local serialized = serialize(body)
-	return self:_request({
+	return self:_request(url, {
 		method = "PATCH",
-		url = url,
 		headers = { ["Content-Type"] = serialized.contentType, ["x-api-key"] = self._apiKey },
 		body = serialized.content,
 	})
 end
 
-function HttpClient.get(self: HttpClient, url: string, params: { [string]: string }?): UnknownResponse
-	return self:_request({
+function HttpClient.get(self: HttpClient, url: string): UnknownResponse
+	return self:_request(url, {
 		method = "GET",
-		url = url,
 		headers = { ["Content-Type"] = "application/json", ["x-api-key"] = self._apiKey },
-		query = params,
 	})
 end
 

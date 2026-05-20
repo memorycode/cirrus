@@ -1,2 +1,2 @@
 [tools]
-lune = "filiptibell/lune@0.8.6"
+lute = "luau-lang/lute@1.0.1-nightly.20260519"
