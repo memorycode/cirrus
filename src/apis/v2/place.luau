@@ -24,9 +24,9 @@ type OutputPlace = Place & {
 
 local function place(http: HttpClient.HttpClient)
 	local function getInfo(_, params: { universeId: robloxTypes.UniverseId, placeId: robloxTypes.PlaceId })
-		return http:get(
+		return http:get<<OutputPlace>>(
 				`https://apis.roblox.com/cloud/v2/universes/{params.universeId}/places/{params.placeId}`
-			) :: HttpClient.Response<OutputPlace>
+			)
 	end
 
 	local function updateInfo(
@@ -38,10 +38,10 @@ local function place(http: HttpClient.HttpClient)
 		}
 	)
 		local fieldMask = createFieldMask(params.fields)
-		return http:patch(
+		return http:patch<<OutputPlace>>(
 			`https://apis.roblox.com/cloud/v2/universes/{params.universeId}/places/{params.placeId}?updateMask={fieldMask}`,
 			params.fields
-		) :: HttpClient.Response<OutputPlace>
+		)
 	end
 
 	return table.freeze({

@@ -1,12 +1,19 @@
-local fs = require("@lune/fs")
-local process = require("@lune/process")
-local serde = require("@lune/serde")
-local Cirrus = require("src")
+local fs = require("@std/fs")
+local process = require("@std/process")
+local json = require("@std/json")
+local pp = require("./src/vendor/pp")
 
--- Load env from an env.toml file
-local ENV_FILE_NAME = "env.toml"
-if fs.isFile(ENV_FILE_NAME) then
-	for key, value in serde.decode("toml", fs.readFile(ENV_FILE_NAME)) do
+local Cirrus = require("./src/")
+
+-- Load env from an env.json file
+local ENV_FILE_NAME = "env.json"
+if fs.exists(ENV_FILE_NAME) then
+	local env = assert(json.deserialize(fs.readFileToString(ENV_FILE_NAME)), "Failed to parse env.json")
+	for key, value in env do
+		if type(key) ~= "string" then
+			continue
+		end
+
 		process.env[key] = value
 	end
 end
@@ -17,10 +24,6 @@ local client = Cirrus.new({
 	retries = 0,
 })
 
-local placeFile = fs.readFile("place.rbxl")
-print(client.v1.place:publish({
-	placeId = 18308356731,
-	universeId = 6206874897,
-	place = buffer.fromstring(placeFile),
-	versionType = "Published",
-}))
+local placeInfo = client.v2.place:getInfo({ universeId = 6206874897, placeId = 18308356731 })
+print(pp(placeInfo))
+print(pp(client.v2.user:get(12233433)))

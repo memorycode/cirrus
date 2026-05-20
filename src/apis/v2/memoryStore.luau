@@ -43,10 +43,10 @@ local function createSortedMap(http: HttpClient.HttpClient)
 		params.universeId = nil
 		params.maxPageSize = if params.maxPageSize then tostring(params.maxPageSize) else nil
 
-		return http:get(
+		return http:get<<{ memoryStoreSortedMapItems: { SortedMapItemOutput }, nextPageToken: string? }>>(
 			`https://apis.roblox.com/cloud/v2/universes/{data.universeId}/memory-store/sorted-maps/{data.name}/items`,
 			params
-		) :: HttpClient.Response<{ memoryStoreSortedMapItems: { SortedMapItemOutput }, nextPageToken: string? }>
+		) 
 	end
 
 	--- @param universeId The universe to access
